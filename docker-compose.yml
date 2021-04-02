@@ -1,0 +1,39 @@
+version: '3.1'
+services:
+  brasilprev-database-service:
+    container_name: brasilprev-database-container
+    image: mysql
+    ports:
+      - "3306:3306"
+    networks:
+      - brasilprev-network
+    volumes:
+      - brasilprev-volume:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: brasilprev
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+
+  brasilprev-application-service:
+    container_name: brasilprev-application-container
+    image: brasilprev
+    ports:
+      - "8080:8080"
+    networks:
+      - brasilprev-network
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+      - brasilprev-database-service
+    environment:
+      MYSQL_HOST: brasilprev-database-service
+
+networks:
+  brasilprev-network:
+
+volumes:
+  brasilprev-volume:
