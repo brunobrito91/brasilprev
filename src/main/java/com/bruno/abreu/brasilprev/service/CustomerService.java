@@ -31,6 +31,9 @@ public class CustomerService implements CrudService<Customer>{
 
     @Override
     public Customer update(Customer customer) {
+        Customer customerInDb = read(customer.getId());
+        customer.getAddress().setId(customerInDb.getAddress().getId());
+
         return create(customer);
     }
 
